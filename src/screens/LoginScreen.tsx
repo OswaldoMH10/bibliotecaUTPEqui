@@ -8,9 +8,14 @@ import {
   Image,
   ImageBackground,
   Dimensions,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { AuthViewModel } from '../viewModels/AuthViewModel';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -20,23 +25,34 @@ export default function LoginScreen({ navigation }: Props) {
   const [matricula, setMatricula] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [mostrarContraseña, setMostrarContraseña] = useState(false);
+  
+  const { loading, error } = useSelector((state: RootState) => state.auth);
+
+  const handleLogin = async () => {
+    if (!matricula || !contraseña) {
+      Alert.alert('Error', 'Por favor completa todos los campos');
+      return;
+    }
+
+    try {
+      await AuthViewModel.login(matricula, contraseña);
+      navigation.navigate('Home');
+    } catch (error) {
+      Alert.alert('Error', 'Credenciales incorrectas');
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* Imagen de fondo */}
       <ImageBackground
         source={require('../assets/img/fondo.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
-        {/* Overlay con degradado */}
-        <View style={styles.overlay}>
-        </View>
+        <View style={styles.overlay}></View>
       </ImageBackground>
 
-      {/* Contenido fuera del ImageBackground */}
       <View style={styles.contentContainer}>
-        {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
             source={require('../assets/img/utp.png')}
@@ -45,12 +61,9 @@ export default function LoginScreen({ navigation }: Props) {
           />
         </View>
 
-        {/* Título */}
         <Text style={styles.title}>Inicio de Sesión</Text>
 
-        {/* Contenedor del formulario */}
         <View style={styles.formContainer}>
-          {/* Campo de Matrícula */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Matrícula</Text>
             <TextInput
@@ -63,7 +76,6 @@ export default function LoginScreen({ navigation }: Props) {
             />
           </View>
 
-          {/* Campo de Contraseña */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Contraseña</Text>
             <View style={styles.passwordContainer}>
@@ -86,12 +98,16 @@ export default function LoginScreen({ navigation }: Props) {
             </View>
           </View>
 
-          {/* Botón de Iniciar Sesión */}
           <TouchableOpacity
-            style={styles.loginButton}
-            onPress={() => navigation.navigate('Home')}
+            style={[styles.loginButton, loading && styles.loginButtonDisabled]}
+            onPress={handleLogin}
+            disabled={loading}
           >
-            <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+            {loading ? (
+              <ActivityIndicator color="white" />
+            ) : (
+              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -202,5 +218,9 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  loginButtonDisabled: {
+    backgroundColor: '#7fb37f',
+    opacity: 0.7,
   },
 });
