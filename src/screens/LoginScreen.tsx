@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }: Props) {
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../assets/img/logo.png')}
+            source={require('../assets/img/utp.png')}
             style={styles.logo}
             resizeMode="contain"
           />
