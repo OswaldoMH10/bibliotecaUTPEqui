@@ -12,7 +12,7 @@ export default function RootNavigator() {
       <Stack.Screen
         name="Login"
         component={LoginScreen}
-        options={{ title: 'Iniciar Sesión' }}
+        options={{ title: 'Iniciar Sesión', headerShown: false }}
       />
       <Stack.Screen
         name="Home"
