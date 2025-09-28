@@ -36,7 +36,7 @@ export default function LoginScreen({ navigation }: Props) {
 
     try {
       await AuthViewModel.login(matricula, contraseña);
-      navigation.navigate('Home');
+      navigation.navigate('Books');
     } catch (error) {
       Alert.alert('Error', 'Credenciales incorrectas');
     }
@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     fontSize: 16,
+    color: '#333',
   },
   eyeButton: {
     padding: 15,

@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
+import BooksScreen from '../screens/BooksScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -15,9 +15,18 @@ export default function RootNavigator() {
         options={{ title: 'Iniciar Sesión', headerShown: false }}
       />
       <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ title: 'Inicio' }}
+        name="Books"
+        component={BooksScreen}
+        options={{ 
+          title: 'Biblioteca UTP',
+          headerStyle: {
+            backgroundColor: '#0d730d',
+          },
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          }
+        }}
       />
     </Stack.Navigator>
   );
