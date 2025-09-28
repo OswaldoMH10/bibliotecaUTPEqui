@@ -10,6 +10,11 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/types';
@@ -42,76 +47,106 @@ export default function LoginScreen({ navigation }: Props) {
     }
   };
 
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={styles.container}>
-      <ImageBackground
-        source={require('../assets/img/fondo.jpg')}
-        style={styles.backgroundImage}
-        resizeMode="cover"
-      >
-        <View style={styles.overlay}></View>
-      </ImageBackground>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <ScrollView 
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled"
+        >
+          {/* Imagen de fondo */}
+          <ImageBackground
+            source={require('../assets/img/fondo.jpg')}
+            style={styles.backgroundImage}
+            resizeMode="cover"
+          >
+            {/* Overlay con degradado */}
+            <View style={styles.overlay}></View>
+          </ImageBackground>
 
-      <View style={styles.contentContainer}>
-        <View style={styles.logoContainer}>
-          <Image
-            source={require('../assets/img/utp.png')}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-        </View>
-
-        <Text style={styles.title}>Inicio de Sesión</Text>
-
-        <View style={styles.formContainer}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Matrícula</Text>
-            <TextInput
-              style={styles.input}
-              value={matricula}
-              onChangeText={setMatricula}
-              placeholder="UTP0000000"
-              placeholderTextColor="#999"
-              autoCapitalize="none"
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={styles.label}>Contraseña</Text>
-            <View style={styles.passwordContainer}>
-              <TextInput
-                style={styles.passwordInput}
-                value={contraseña}
-                onChangeText={setContraseña}
-                placeholder="************"
-                placeholderTextColor="#999"
-                secureTextEntry={!mostrarContraseña}
+          {/* Contenido fuera del ImageBackground */}
+          <View style={styles.contentContainer}>
+            {/* Logo */}
+            <View style={styles.logoContainer}>
+              <Image
+                source={require('../assets/img/utp.png')}
+                style={styles.logo}
+                resizeMode="contain"
               />
+            </View>
+
+            {/* Título */}
+            <Text style={styles.title}>Inicio de Sesión</Text>
+
+            {/* Contenedor del formulario */}
+            <View style={styles.formContainer}>
+              {/* Campo de Matrícula */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Matrícula</Text>
+                <TextInput
+                  style={styles.input}
+                  value={matricula}
+                  onChangeText={setMatricula}
+                  placeholder="UTP0000000"
+                  placeholderTextColor="#999"
+                  autoCapitalize="none"
+                  keyboardType="default"
+                  returnKeyType="next"
+                />
+              </View>
+
+              {/* Campo de Contraseña */}
+              <View style={styles.inputContainer}>
+                <Text style={styles.label}>Contraseña</Text>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={styles.passwordInput}
+                    value={contraseña}
+                    onChangeText={setContraseña}
+                    placeholder="************"
+                    placeholderTextColor="#999"
+                    secureTextEntry={!mostrarContraseña}
+                    returnKeyType="done"
+                    onSubmitEditing={handleLogin}
+                  />
+                  <TouchableOpacity
+                    style={styles.eyeButton}
+                    onPress={() => setMostrarContraseña(!mostrarContraseña)}
+                  >
+                    <Text style={styles.eyeText}>
+                      {mostrarContraseña ? '👁️' : '👁️‍🗨️'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {/* Botón de Iniciar Sesión */}
               <TouchableOpacity
-                style={styles.eyeButton}
-                onPress={() => setMostrarContraseña(!mostrarContraseña)}
+                style={[styles.loginButton, loading && styles.loginButtonDisabled]}
+                onPress={handleLogin}
+                disabled={loading}
               >
-                <Text style={styles.eyeText}>
-                  {mostrarContraseña ? '👁️' : '👁️‍🗨️'}
-                </Text>
+                {loading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+                )}
               </TouchableOpacity>
             </View>
-          </View>
 
-          <TouchableOpacity
-            style={[styles.loginButton, loading && styles.loginButtonDisabled]}
-            onPress={handleLogin}
-            disabled={loading}
-          >
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+            {/* Espacio adicional para cuando el teclado está abierto */}
+            <View style={styles.keyboardSpacer} />
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -119,8 +154,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContainer: {
+    flexGrow: 1,
+  },
   backgroundImage: {
-    flex: 1,
     width: width,
     height: height * 0.5, // Ocupa la mitad de la pantalla
   },
@@ -130,14 +167,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(13, 115, 13, 0.5)', // Degradado simulado con opacity
   },
   contentContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 30,
+    marginTop: -height * 0.4, // Ajuste para superponer el formulario sobre la imagen
   },
   logoContainer: {
     alignItems: 'center',
@@ -146,8 +180,6 @@ const styles = StyleSheet.create({
   logo: {
     width: 120,
     height: 120,
-    //backgroundColor: '#f0f0f0',
-    //borderRadius: 15,
   },
   title: {
     fontSize: 28,
@@ -215,13 +247,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
   },
+  loginButtonDisabled: {
+    backgroundColor: '#7fb37f',
+    opacity: 0.7,
+  },
   loginButtonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  loginButtonDisabled: {
-    backgroundColor: '#7fb37f',
-    opacity: 0.7,
+  keyboardSpacer: {
+    height: 100, // Espacio adicional para cuando el teclado está abierto
   },
 });
