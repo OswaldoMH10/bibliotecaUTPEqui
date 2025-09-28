@@ -57,7 +57,7 @@ export default function LoginScreen({ navigation }: Props) {
               style={styles.input}
               value={matricula}
               onChangeText={setMatricula}
-              placeholder="Matrícula"
+              placeholder="UTP0000000"
               placeholderTextColor="#999"
               autoCapitalize="none"
             />
