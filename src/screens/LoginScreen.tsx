@@ -21,6 +21,7 @@ import { RootStackParamList } from '../navigation/types';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { AuthViewModel } from '../viewModels/AuthViewModel';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
@@ -120,9 +121,11 @@ export default function LoginScreen({ navigation }: Props) {
                     style={styles.eyeButton}
                     onPress={() => setMostrarContraseña(!mostrarContraseña)}
                   >
-                    <Text style={styles.eyeText}>
-                      {mostrarContraseña ? '👁️' : '👁️‍🗨️'}
-                    </Text>
+                    <MaterialIcons
+                      name={mostrarContraseña ? 'visibility' : 'visibility-off'}
+                      size={24}
+                      color="#666"
+                    />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -235,7 +238,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   eyeButton: {
-    padding: 15,
+    padding: 10,
   },
   eyeText: {
     fontSize: 20,
