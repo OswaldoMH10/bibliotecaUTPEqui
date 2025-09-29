@@ -148,7 +148,7 @@ export default function BooksScreen({ navigation }: Props) {
       <MaterialIcons
         name={icon.name}
         size={24}
-        color={activeTab === icon.name ? 'white' : 'white'}
+        color={activeTab === icon.name ? 'black' : 'white'}
       />
     </TouchableOpacity>
   );
