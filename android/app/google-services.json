@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "549509040049",
+    "project_id": "base-biblioteca-c454c",
+    "storage_bucket": "base-biblioteca-c454c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549509040049:android:771344ef0ff255f8a01f90",
+        "android_client_info": {
+          "package_name": "com.bibliotecautp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjvrgJgP83al8nXUNrmiClXsxw3BgD8pc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
