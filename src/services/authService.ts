@@ -1,29 +1,44 @@
 import { User } from '../models/User';
+import firestore from "@react-native-firebase/firestore";
 
-// Simulación de API - reemplaza con tu API real
 export class AuthService {
-  static async login(matricula: string, contraseña: string): Promise<User> {
-    // Simular llamada a API
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (matricula && contraseña) {
-          resolve({
-            matricula,
-            nombre: 'Usuario Demo',
-            email: 'usuario@utp.edu.mx',
-          });
-        } else {
-          reject(new Error('Credenciales inválidas'));
-        }
-      }, 1500);
-    });
+  static async login(matricula: string, pass: string): Promise<User> {
+    const matriculaNormalized = matricula.trim();
+    const passNormalized = pass.trim();
+
+    try {
+      const snapshot = await firestore()
+        .collection("usuarios")
+        .where("matricula", "==", matriculaNormalized)
+        .where("contrasena", "==", passNormalized)
+        .get();
+
+      if (snapshot.empty) {
+        throw new Error("Credenciales inválidas");
+      }
+
+      const doc = snapshot.docs[0];
+      const data = doc.data();
+
+      return {
+        nombre: data.nombre,
+        apellido: data.apellido,
+        fechaNac: data.fechaNac,
+        sexo: data.sexo,
+        telefono: data.telefono,
+        matricula: data.matricula,
+        email: data.email,
+        contrasena: data.contrasena,
+        area: data.area,
+        carrera: data.carrera,
+      } as User;
+
+    } catch (error: any) {
+      throw new Error(error.message);
+    }
   }
 
   static async logout(): Promise<void> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 500);
-    });
+    return Promise.resolve();
   }
 }
