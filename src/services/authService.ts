@@ -1,16 +1,21 @@
 import { User } from '../models/User';
 import firestore from "@react-native-firebase/firestore";
+import { EncryptionService } from "./encryptionService";
 
 export class AuthService {
   static async login(matricula: string, pass: string): Promise<User> {
     const matriculaNormalized = matricula.trim();
     const passNormalized = pass.trim();
 
+    // Encriptacón de la contraseña recibida
+    const encryptedPass = EncryptionService.encrypt(passNormalized);
+
     try {
       const snapshot = await firestore()
         .collection("usuarios")
         .where("matricula", "==", matriculaNormalized)
-        .where("contrasena", "==", passNormalized)
+        .where("contrasena", "==", encryptedPass)
+        // .where("contrasena", "==", passNormalized)
         .get();
 
       if (snapshot.empty) {
