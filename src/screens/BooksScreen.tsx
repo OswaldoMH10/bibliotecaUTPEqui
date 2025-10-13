@@ -57,7 +57,11 @@ export default function BooksScreen({ navigation }: Props) {
 
   // Si en el futuro usas URLs desde Firestore, reemplaza este mapa
   const imagenesMap: Record<string, any> = {
-    "libro1.jpg": require('../assets/img/books/libro1.jpg')
+    "libro1.jpg": require('../assets/img/books/libro1.jpg'),
+    "donquijote.jpg": require('../assets/img/books/donquijote.jpg'),
+    "lasaventuras.jpg": require('../assets/img/books/lasaventuras.jpg'),
+    "losojos.jpg": require('../assets/img/books/losojos.jpg'),
+    "elprincipito.jpg": require('../assets/img/books/elprincipito.jpg'),
   };
 
   const renderBookItem = ({ item }: { item: Book }) => (
@@ -69,8 +73,18 @@ export default function BooksScreen({ navigation }: Props) {
       }}
     >
       <View style={styles.imageContainer}>
+        {/* <Image
+          source={require(`../assets/img/${item.imagen}`)} //imagenesMap[item.imagen]
+          // source={require(`../assets/img/${item.imagen}`)} //imagenesMap[item.imagen]
+          style={styles.bookImage}
+          resizeMode="cover"
+        /> */}
         <Image
-          source={imagenesMap[item.imagen]}
+          source={
+            imagenesMap[item.imagen]
+              ? imagenesMap[item.imagen]
+              : { uri: item.imagen }
+          }
           style={styles.bookImage}
           resizeMode="cover"
         />
