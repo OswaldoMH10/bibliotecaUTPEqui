@@ -14,6 +14,9 @@ import { RootStackParamList } from '../navigation/types';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Book } from '../models/Book';
 import { useBooksViewModel } from '../viewModels/BooksViewModel';
+import { BookInformation } from './BookInfo';
+import { imagenesMap } from '../utils/imagenesFile';
+import { useRoute } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Books'>;
 
@@ -56,6 +59,13 @@ export default function BooksScreen({ navigation }: Props) {
   );
 
   // Si en el futuro usas URLs desde Firestore, reemplaza este mapa
+  // const imagenesMap: Record<string, any> = {
+  //   "libro1.jpg": require('../assets/img/books/libro1.jpg'),
+  //   "donquijote.jpg": require('../assets/img/books/donquijote.jpg'),
+  //   "lasaventuras.jpg": require('../assets/img/books/lasaventuras.jpg'),
+  //   "losojos.jpg": require('../assets/img/books/losojos.jpg'),
+  //   "elprincipito.jpg": require('../assets/img/books/elprincipito.jpg'),
+  // };
   const imagenesMap: Record<string, any> = {
     "libro1.jpg": require('../assets/img/books/libro1.jpg'),
     "donquijote.jpg": require('../assets/img/books/donquijote.jpg'),
@@ -65,12 +75,10 @@ export default function BooksScreen({ navigation }: Props) {
   };
 
   const renderBookItem = ({ item }: { item: Book }) => (
+
     <TouchableOpacity
       style={styles.bookCard}
-      onPress={() => {
-        // Acción al presionar cualquier parte del libro
-        console.log('Libro seleccionado:', item.nombre);
-      }}
+      onPress={() => navigation.navigate('BookInfo', {item})}
     >
       <View style={styles.imageContainer}>
         {/* <Image
